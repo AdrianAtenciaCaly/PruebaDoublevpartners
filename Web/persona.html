@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Listado de Personas</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">Prueba Tecnica Adrian Atencia</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalAgregar">
+                        Agregar
+                    </button>
+                </li>
+     
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <h2>Listado de Personas</h2>
+
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+ 
+                    <th>Nombres</th>
+                    <th>Apellidos</th>
+                    <th>Tipo Identificacion</th>
+                    <th># Identificacion</th>
+                    <th>Fecha De Creacion</th>
+                    <th>Correo</th>
+                </tr>
+            </thead>
+            <tbody id="tablaPersonasBody"></tbody>
+        </table>
+    </div>
+
+
+    <div class="modal fade" id="modalAgregar" tabindex="-1" role="dialog" aria-labelledby="modalAgregarLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalAgregarLabel">Agregar Persona</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <form id="personaForm">
+                        <div class="form-group">
+                            <label for="tipoIdentificacion">Tipo Identificación:</label>
+                            <select id="tipoIdentificacion" class="form-control" required>
+                                <option value="CC">Cédula</option>
+                                <option value="Pasaporte">Pasaporte</option>
+                                <option value="Otro">Otro</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="numeroIdentificacion">Número de Identificación:</label>
+                            <input type="number" class="form-control" id="numeroIdentificacion" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="nombres">Nombres:</label>
+                            <input type="text" class="form-control" id="nombres" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="apellidos">Apellidos:</label>
+                            <input type="text" class="form-control" id="apellidos" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email:</label>
+                            <input type="email" class="form-control" id="email" required>
+                        </div>
+
+                        <button type="button" class="btn btn-primary" onclick="insertarPersona()">Insertar Persona</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+<div class="modal fade" id="modalActualizar" tabindex="-1" role="dialog" aria-labelledby="modalActualizarLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalActualizarLabel">Actualizar Persona</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="actualizarPersonaForm">
+                    <input type="hidden" id="actualizarId" />
+                    <div class="form-group">
+                        <label for="actualizarTipoIdentificacion">Tipo Identificacion:</label>
+                        <input type="text" class="form-control" id="actualizarTipoIdentificacion" disabled>
+                    </div>
+                    <div class="form-group">
+                        <label for="actualizarNumeroIdentificacion">NumeroI dentificacion:</label>
+                        <input type="text" class="form-control" id="actualizarNumeroIdentificacion" disabled>
+                    </div>
+                    <div class="form-group">
+                        <label for="actualizarFechaCreacion">Fecha Creacion:</label>
+                        <input type="text" class="form-control" id="actualizarFechaCreacion" disabled>
+                    </div>
+                    <div class="form-group">
+                        <label for="actualizarNombres">Nombres:</label>
+                        <input type="text" class="form-control" id="actualizarNombres" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="actualizarApellidos">Apellidos:</label>
+                        <input type="text" class="form-control" id="actualizarApellidos" required>
+                    </div>
+                   
+                    <div class="form-group">
+                        <label for="actualizarEmail">Email:</label>
+                        <input type="text" class="form-control" id="actualizarEmail" >
+                    </div>
+                    <!-- Agrega otros campos según sea necesario -->
+                    <button type="button" class="btn btn-primary" onclick="actualizarPersona()">Actualizar Persona</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+
+        document.addEventListener('DOMContentLoaded', function () {
+            cargarDatos();
+        });
+
+        function cargarDatos() {
+            fetch('http://localhost:5117/api/Data/GetPersonas')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.mensaje === "OK") {
+                        console.log(data)
+                        mostrarPersonas(data.response);
+                    } else {
+                       // alert('Error al obtener datos de personas');
+                        Swal.fire({
+                            position: "top-end",
+                            icon: "error",
+                            title: "YError al obtener datos de personas",
+                            showConfirmButton: false,
+                            timer: 1500
+                            });
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        function mostrarPersonas(personas) {
+            var tablaBody = document.getElementById('tablaPersonasBody');
+
+            tablaBody.innerHTML = '';
+            console.log(personas);
+            personas.forEach(persona => {
+                var fila = document.createElement('tr');
+                fila.innerHTML = `
+     
+                    <td>${persona.nombres}</td>
+                    <td>${persona.apellidos}</td>
+                    <td>${persona.tipoIdentificacion}</td>
+                    <td>${persona.numeroIdentificacion}</td>
+                    <td>${persona.fechaCreacion}</td>
+                    <td>${persona.email}</td>
+                    <td>
+                <button class="btn btn-danger btn-sm" onclick="eliminarPersona(${persona.identificador}, '${persona.nombres}', '${persona.apellidos}')">
+                   Eliminar
+                </button>
+
+            </td>
+            <td>
+                <button type="button" class="btn btn-info btn-sm" onclick="mostrarModalActualizar(${persona.identificador}, '${persona.nombres}', '${persona.apellidos}', '${persona.tipoIdentificacion}', '${persona.numeroIdentificacion}', '${persona.fechaCreacion}', '${persona.email}')">
+                    <i class="fas fa-edit"></i> Actualizar
+                </button>
+            </td>
+                `;
+                tablaBody.appendChild(fila);
+            });
+        }
+
+        function insertarPersona() {
+            var nombres = document.getElementById("nombres").value;
+            var apellidos = document.getElementById("apellidos").value;
+            var numeroIdentificacion = document.getElementById("numeroIdentificacion").value;
+            var email = document.getElementById("email").value;
+            var tipoIdentificacion = document.getElementById("tipoIdentificacion").value;
+
+
+
+            fetch('http://localhost:5117/api/Data/SavePersona', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    Nombres: nombres,
+                    Apellidos: apellidos,
+                    NumeroIdentificacion: numeroIdentificacion,
+                    Email: email,
+                    TipoIdentificacion: tipoIdentificacion,
+ 
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+
+                Swal.fire({
+                    position: "top-end",
+                    icon: "success",
+                    title: data.mensaje,
+                    showConfirmButton: false,
+                    timer: 1500
+                    });
+                $('#modalAgregar').modal('hide');
+
+                cargarDatos();
+            })
+            .catch(error => console.error('Error:', error));
+        }
+        function eliminarPersona(id, nombre, apellido) {
+
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: `Se eliminará a ${nombre} ${apellido}.`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sí, eliminar'
+    })
+    .then((result) => {
+        if (result.isConfirmed) {
+
+            fetch(`http://localhost:5117/api/Data/EliminarPersona/${id}`, {
+                method: 'DELETE'
+            })
+            .then(response => response.json())
+            .then(data => {
+                Swal.fire({
+                    position: "top-end",
+                    icon: "success",
+                    title: data.mensaje,
+                    showConfirmButton: false,
+                    timer: 1500
+                    });
+                cargarDatos();
+            })
+            .catch(error => console.error('Error:', error));
+        }
+    });
+}
+function mostrarModalActualizar(id, nombres, apellidos, tipoIdentificacion, numeroIdentificacion, fechaCreacion, email) {
+    // Llena el formulario en el modal con la información actual
+    console.log(tipoIdentificacion)
+    document.getElementById('actualizarId').value = id;
+    document.getElementById('actualizarNombres').value = nombres;
+    document.getElementById('actualizarApellidos').value = apellidos;
+    document.getElementById('actualizarTipoIdentificacion').value = tipoIdentificacion;
+    document.getElementById('actualizarNumeroIdentificacion').value = numeroIdentificacion;
+    document.getElementById('actualizarFechaCreacion').value = fechaCreacion;
+    document.getElementById('actualizarEmail').value = email;
+
+    // Muestra el modal
+    $('#modalActualizar').modal('show');
+}
+function actualizarPersona() {
+        var id = document.getElementById('actualizarId').value;
+        var nombres = document.getElementById('actualizarNombres').value;
+        var apellidos = document.getElementById('actualizarApellidos').value;
+        // Obtén otros campos según sea necesario
+
+        fetch('http://localhost:5117/api/Data/ActualizarPersona', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                Identificador: id,
+                Nombres: nombres,
+                Apellidos: apellidos
+                // Agrega otros campos según sea necesario
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            Swal.fire({
+                    position: "top-end",
+                    icon: "success",
+                    title: data.mensaje,
+                    showConfirmButton: false,
+                    timer: 1500
+                    });
+            $('#modalActualizar').modal('hide');
+            cargarDatos(); // O llama a la función que refresca tus datos
+        })
+        .catch(error => console.error('Error:', error));
+    }
+    </script>
+</body>
+</html>
+
